@@ -26,7 +26,6 @@ public class JMSProducer {
 		MessageProducer messageProducer = null;
 		connectionFactory = new ActiveMQConnectionFactory(JMSProducer.USERNAME, JMSProducer.PASSWORD,
 				JMSProducer.BROKEURL);
-
 		try {
 			connection = connectionFactory.createConnection();
 			connection.start();
