@@ -8,6 +8,7 @@ import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.Session;
+import javax.jms.TextMessage;
 
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
@@ -21,21 +22,21 @@ public class JMSConsumer {
 	public static void main(String[] args) {
 		ConnectionFactory connectionFactory;
 		Connection connection = null;
-		Session session;
+		Session session = null;
 		Destination destination;
-		MessageConsumer messageConsumer;
+		MessageConsumer messageConsumer = null;
 		connectionFactory = new ActiveMQConnectionFactory(JMSConsumer.USERNAME, JMSConsumer.PASSWORD,
 				JMSConsumer.BROKEURL);
 
 		try {
-			//String selector = "index % 2 = 0";					
-			connection = connectionFactory.createConnection();	
-			connection.start();	
+			// String selector = "index % 2 = 0";
+			connection = connectionFactory.createConnection();
+			connection.start();
 			session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 			destination = session.createQueue("HelloWorld");
 			messageConsumer = session.createConsumer(destination);
 			messageConsumer.setMessageListener(new MessageListener() {
-				
+
 				@Override
 				public void onMessage(Message message) {
 					ActiveMQTextMessage amq = (ActiveMQTextMessage) message;
@@ -46,17 +47,30 @@ public class JMSConsumer {
 					}
 				}
 			});
-			
-//			while (true) {
-//				TextMessage textMessage = (TextMessage) messageConsumer.receive(1000);				
-//				if (textMessage != null) {
-//					System.out.println("Recv:" + textMessage.getText());					
-//				} else {
-//					break;
-//				}
-//			}
+
 		} catch (JMSException e) {
 			e.printStackTrace();
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+					session.close();
+					messageConsumer.close();
+				} catch (JMSException e) {
+
+				}
+			}
+		}
+	}
+
+	public static void consumerPoll(MessageConsumer msgConsumer) throws JMSException {
+		while (true) {
+			TextMessage textMessage = (TextMessage) msgConsumer.receive(1000);
+			if (textMessage != null) {
+				System.out.println("Recv:" + textMessage.getText());
+			} else {
+				break;
+			}
 		}
 	}
 }

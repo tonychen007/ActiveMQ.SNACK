@@ -21,9 +21,9 @@ public class JMSProducer {
 	public static void main(String[] args) {
 		ConnectionFactory connectionFactory;
 		Connection connection = null;
-		Session session;
+		Session session = null;
 		Destination destination;
-		MessageProducer messageProducer;
+		MessageProducer messageProducer = null;
 		connectionFactory = new ActiveMQConnectionFactory(JMSProducer.USERNAME, JMSProducer.PASSWORD,
 				JMSProducer.BROKEURL);
 
@@ -40,7 +40,9 @@ public class JMSProducer {
 		} finally {
 			if (connection != null) {
 				try {
-					connection.close();
+					messageProducer.close();
+					session.close();					
+					connection.close();					
 				} catch (JMSException e) {
 					e.printStackTrace();
 				}
