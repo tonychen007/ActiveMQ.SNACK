@@ -23,12 +23,13 @@ public class Publisher {
     protected static int total;
     
     protected static String brokerURL = "tcp://localhost:61616";
+    //protected static String brokerURL = "vm://localhost";
     protected static transient ConnectionFactory factory;
     protected transient Connection connection;
     protected transient Session session;
     protected transient MessageProducer producer;
     
-    public Publisher() throws JMSException {
+    public Publisher() throws JMSException {        
     	factory = new ActiveMQConnectionFactory(brokerURL);
     	connection = factory.createConnection();
     	try {

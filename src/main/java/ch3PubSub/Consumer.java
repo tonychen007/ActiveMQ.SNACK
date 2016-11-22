@@ -16,9 +16,9 @@ public class Consumer {
 	private transient Connection connection;
 	private transient Session session;
 
-	public Consumer() throws JMSException {
-		factory = new ActiveMQConnectionFactory(brokerURL);
-		connection = factory.createConnection();
+	public Consumer() throws JMSException {		
+		factory = new ActiveMQConnectionFactory(brokerURL);		
+		connection = factory.createConnection();		
 		connection.start();
 		session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 	}
