@@ -15,9 +15,10 @@ public class JMSProducer {
 
 	private static final String USERNAME = ActiveMQConnection.DEFAULT_USER;
 	private static final String PASSWORD = ActiveMQConnection.DEFAULT_PASSWORD;
-	private static final String BROKEURL = ActiveMQConnection.DEFAULT_BROKER_URL;
+	//private static final String BROKEURL = ActiveMQConnection.DEFAULT_BROKER_URL;
 	private static final int SENDNUM = 10;
 
+	private static final String BROKEURL = "tcp://0.0.0.0:61616";
 	public static void main(String[] args) {
 		ConnectionFactory connectionFactory;
 		Connection connection = null;
@@ -38,9 +39,7 @@ public class JMSProducer {
 			e.printStackTrace();
 		} finally {
 			if (connection != null) {
-				try {
-					messageProducer.close();
-					session.close();					
+				try {			
 					connection.close();					
 				} catch (JMSException e) {
 					e.printStackTrace();

@@ -11,7 +11,8 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 
 public class Consumer {
 
-	private static String brokerURL = "tcp://localhost:61616";
+	//private static String brokerURL = "tcp://localhost:61617";
+	protected static String brokerURL = "failover:(tcp://0.0.0.0:61616,tcp://0.0.0.0:61617)";
 	private static transient ConnectionFactory factory;
 	private transient Connection connection;
 	private transient Session session;

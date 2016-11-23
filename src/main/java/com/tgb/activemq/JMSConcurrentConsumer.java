@@ -1,5 +1,8 @@
 package com.tgb.activemq;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
@@ -8,27 +11,37 @@ import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.Session;
-import javax.jms.TextMessage;
 
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQTextMessage;
 
-public class JMSConsumer {
+public class JMSConcurrentConsumer {
+	
+	public static void main(String[] args) {
+		ExecutorService thService = Executors.newCachedThreadPool();
+		thService.submit(new ConcurrentConsumer());
+		thService.submit(new ConcurrentConsumer());
+		thService.shutdown();
+	}
+}
+
+class ConcurrentConsumer implements Runnable {
 	private static final String USERNAME = ActiveMQConnection.DEFAULT_USER;
 	private static final String PASSWORD = ActiveMQConnection.DEFAULT_PASSWORD;
 	//private static final String BROKEURL = ActiveMQConnection.DEFAULT_BROKER_URL;
 
-	private static final String BROKEURL = "tcp://0.0.0.0:61617";
+	private static final String BROKEURL = "tcp://0.0.0.0:61616";
 	
-	public static void main(String[] args) {
+	@Override
+	public void run() {
 		ConnectionFactory connectionFactory;
 		Connection connection = null;
 		Session session = null;
 		Destination destination;
 		MessageConsumer messageConsumer = null;
-		connectionFactory = new ActiveMQConnectionFactory(JMSConsumer.USERNAME, JMSConsumer.PASSWORD,
-				JMSConsumer.BROKEURL);
+		connectionFactory = new ActiveMQConnectionFactory(ConcurrentConsumer.USERNAME, ConcurrentConsumer.PASSWORD,
+				ConcurrentConsumer.BROKEURL);
 
 		try {
 			// String selector = "index % 2 = 0";
@@ -52,17 +65,6 @@ public class JMSConsumer {
 
 		} catch (JMSException e) {
 			e.printStackTrace();
-		}
-	}
-
-	public static void consumerPoll(MessageConsumer msgConsumer) throws JMSException {
-		while (true) {
-			TextMessage textMessage = (TextMessage) msgConsumer.receive(1000);
-			if (textMessage != null) {
-				System.out.println("Recv:" + textMessage.getText());
-			} else {
-				break;
-			}
-		}
-	}
+		}	
+	}	
 }
