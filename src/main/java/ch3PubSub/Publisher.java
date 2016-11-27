@@ -22,10 +22,10 @@ public class Publisher {
     protected static int count = 10;
     protected static int total;
     
-    //protected static String brokerURL = "tcp://localhost:61616";
+    protected static String brokerURL = "tcp://localhost:61616";
     //protected static String brokerURL = "vm://localhost";
-    //protected static String brokerURL = "failover:(tcp://0.0.0.0:61616,tcp://0.0.0.0:61617)";
-    protected static String brokerURL = "discovery:(multicast://default)";
+    //protected static String brokerURL = "failover:(tcp://0.0.0.0:61616,tcp://0.0.0.0:61626)";
+    //protected static String brokerURL = "discovery:(multicast://default)";
     protected static transient ConnectionFactory factory;
     protected transient Connection connection;
     protected transient Session session;

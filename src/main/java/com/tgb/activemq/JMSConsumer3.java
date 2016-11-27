@@ -14,12 +14,12 @@ import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQTextMessage;
 
-public class JMSConsumer {
+public class JMSConsumer3 {
 	private static final String USERNAME = ActiveMQConnection.DEFAULT_USER;
 	private static final String PASSWORD = ActiveMQConnection.DEFAULT_PASSWORD;
 	//private static final String BROKEURL = ActiveMQConnection.DEFAULT_BROKER_URL;
 
-	private static final String BROKEURL = "tcp://0.0.0.0:61617";
+	private static final String BROKEURL = "tcp://0.0.0.0:61636";
 	
 	public static void main(String[] args) {
 		ConnectionFactory connectionFactory;
@@ -27,8 +27,8 @@ public class JMSConsumer {
 		Session session = null;
 		Destination destination;
 		MessageConsumer messageConsumer = null;
-		connectionFactory = new ActiveMQConnectionFactory(JMSConsumer.USERNAME, JMSConsumer.PASSWORD,
-				JMSConsumer.BROKEURL);
+		connectionFactory = new ActiveMQConnectionFactory(JMSConsumer3.USERNAME, JMSConsumer3.PASSWORD,
+				JMSConsumer3.BROKEURL);
 
 		try {
 			// String selector = "index % 2 = 0";

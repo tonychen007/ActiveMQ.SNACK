@@ -1,8 +1,5 @@
 package com.tgb.activemq;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
@@ -11,37 +8,27 @@ import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.Session;
+import javax.jms.TextMessage;
 
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQTextMessage;
 
-public class JMSConcurrentConsumer {
-	
-	public static void main(String[] args) {
-		ExecutorService thService = Executors.newCachedThreadPool();
-		thService.submit(new ConcurrentConsumer());
-		thService.submit(new ConcurrentConsumer());
-		thService.shutdown();
-	}
-}
-
-class ConcurrentConsumer implements Runnable {
+public class JMSConsumer2 {
 	private static final String USERNAME = ActiveMQConnection.DEFAULT_USER;
 	private static final String PASSWORD = ActiveMQConnection.DEFAULT_PASSWORD;
 	//private static final String BROKEURL = ActiveMQConnection.DEFAULT_BROKER_URL;
 
 	private static final String BROKEURL = "tcp://0.0.0.0:61636";
 	
-	@Override
-	public void run() {
+	public static void main(String[] args) {
 		ConnectionFactory connectionFactory;
 		Connection connection = null;
 		Session session = null;
 		Destination destination;
 		MessageConsumer messageConsumer = null;
-		connectionFactory = new ActiveMQConnectionFactory(ConcurrentConsumer.USERNAME, ConcurrentConsumer.PASSWORD,
-				ConcurrentConsumer.BROKEURL);
+		connectionFactory = new ActiveMQConnectionFactory(JMSConsumer2.USERNAME, JMSConsumer2.PASSWORD,
+				JMSConsumer2.BROKEURL);
 
 		try {
 			// String selector = "index % 2 = 0";
@@ -65,6 +52,17 @@ class ConcurrentConsumer implements Runnable {
 
 		} catch (JMSException e) {
 			e.printStackTrace();
-		}	
-	}	
+		}
+	}
+
+	public static void consumerPoll(MessageConsumer msgConsumer) throws JMSException {
+		while (true) {
+			TextMessage textMessage = (TextMessage) msgConsumer.receive(1000);
+			if (textMessage != null) {
+				System.out.println("Recv:" + textMessage.getText());
+			} else {
+				break;
+			}
+		}
+	}
 }

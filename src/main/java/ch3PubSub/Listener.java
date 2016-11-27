@@ -17,6 +17,7 @@ public class Listener implements MessageListener {
 			boolean up = map.getBoolean("up");
 			DecimalFormat df = new DecimalFormat( "#,###,###,##0.00" );
 			System.out.println(stock + "\t" + df.format(price) + "\t" + df.format(offer) + "\t" + (up?"up":"down"));
+			map.acknowledge();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
