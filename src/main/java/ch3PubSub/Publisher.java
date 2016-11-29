@@ -36,7 +36,7 @@ public class Publisher {
     	//connection = factory.createConnection();
     	
     	// authentication is used here, for simply plugins in xml <simpleAuthenticationPlugin>
-    	connection = factory.createConnection("admin","admin");    
+    	connection = factory.createConnection();    
     	try {
         connection.start();
     	} catch (JMSException jmse) {
