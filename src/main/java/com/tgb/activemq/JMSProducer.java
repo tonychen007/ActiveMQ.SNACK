@@ -16,7 +16,7 @@ public class JMSProducer {
 	private static final String USERNAME = ActiveMQConnection.DEFAULT_USER;
 	private static final String PASSWORD = ActiveMQConnection.DEFAULT_PASSWORD;
 	//private static final String BROKEURL = ActiveMQConnection.DEFAULT_BROKER_URL;
-	private static final int SENDNUM = 30;
+	private static final int SENDNUM = 10;
 
 	private static final String BROKEURL = "tcp://0.0.0.0:61616";
 	public static void main(String[] args) {
@@ -25,14 +25,13 @@ public class JMSProducer {
 		Session session = null;
 		Destination destination;
 		MessageProducer messageProducer = null;
-		connectionFactory = new ActiveMQConnectionFactory(JMSProducer.USERNAME, JMSProducer.PASSWORD,
-				JMSProducer.BROKEURL);
+		connectionFactory = new ActiveMQConnectionFactory(JMSProducer.BROKEURL);
 		try {
-			connection = connectionFactory.createConnection();
+			connection = connectionFactory.createConnection("admin","admin");			
 			connection.start();
 			session = connection.createSession(true, Session.AUTO_ACKNOWLEDGE);
 			destination = session.createQueue("HelloWorld");
-			messageProducer = session.createProducer(destination);
+			messageProducer = session.createProducer(destination);			
 			sendMessage(session, messageProducer);
 			session.commit();
 		} catch (Exception e) {
@@ -50,7 +49,7 @@ public class JMSProducer {
 
 	public static void sendMessage(Session session, MessageProducer messageProducer) throws Exception {
 		for (int i = 0; i < JMSProducer.SENDNUM; i++) {
-			TextMessage message = session.createTextMessage("ActiveMQ Send" + i);
+			TextMessage message = session.createTextMessage("ActiveMQ Send" + i);			
 			message.setIntProperty("index", i);
 			System.out.println("Send:Activemq Send" + i);
 			messageProducer.send(message);

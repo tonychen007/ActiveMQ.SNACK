@@ -22,7 +22,7 @@ public class Publisher {
     protected static int count = 10;
     protected static int total;
     
-    protected static String brokerURL = "tcp://localhost:61616";
+    protected static String brokerURL = "ssl://localhost:61617";
     //protected static String brokerURL = "vm://localhost";
     //protected static String brokerURL = "failover:(tcp://0.0.0.0:61616,tcp://0.0.0.0:61626)";
     //protected static String brokerURL = "discovery:(multicast://default)";
@@ -33,7 +33,10 @@ public class Publisher {
     
     public Publisher() throws JMSException {        
     	factory = new ActiveMQConnectionFactory(brokerURL);
-    	connection = factory.createConnection();
+    	//connection = factory.createConnection();
+    	
+    	// authentication is used here, for simply plugins in xml <simpleAuthenticationPlugin>
+    	connection = factory.createConnection("admin","admin");    
     	try {
         connection.start();
     	} catch (JMSException jmse) {

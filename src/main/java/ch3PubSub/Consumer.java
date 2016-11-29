@@ -2,7 +2,6 @@ package ch3PubSub;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
-import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Session;
 import javax.jms.Topic;
@@ -37,11 +36,11 @@ public class Consumer {
 		Consumer consumer = new Consumer();
 		String[] sbs = new String[] { "Taiwan", "USA", "JAPAN" };
 		for (String stock : sbs) {
-			Destination destination = consumer.getSession().createTopic("STOCKS." + stock);		
+			Topic topic = consumer.getSession().createTopic("STOCKS." + stock + "?retroactive=true");		
 			//MessageConsumer messageConsumer = consumer.getSession().createConsumer(destination);			
 			//messageConsumer.setMessageListener(new Listener());
 			
-			TopicSubscriber durableSubscribe =  consumer.getSession().createDurableSubscriber((Topic) destination,"STOCKS." + stock);
+			TopicSubscriber durableSubscribe =  consumer.getSession().createDurableSubscriber(topic,"STOCKS." + stock);
 			durableSubscribe.setMessageListener(new Listener());
 		}
 	}
