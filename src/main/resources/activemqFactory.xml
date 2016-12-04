@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://www.springframework.org/schema/jee 
+    http://www.springframework.org/schema/jee/spring-jee-4.0.xsd">
+
+	<bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="tcp://localhost:61616" />
+		<property name="userName" value="admin" />
+		<property name="password" value="admin" />
+	</bean>
+
+	<bean id="pooledJmsConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory"
+		destroy-method="stop">
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
+	</bean>
+
+	<bean id="queueDest" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg value="Hello World" />
+	</bean>
+
+	<bean id="msgListener" class="spring.jms.JMSMessageListner" />
+
+	<bean id="myConsumer"
+		class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
+		<property name="destination" ref="queueDest" />
+		<property name="messageListener" ref="msgListener" />
+	</bean>
+
+	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory" ref="pooledJmsConnectionFactory" />
+	</bean>
+
+	<bean id="myMsgCreator" class="spring.jms.MyMessageCreator" />
+	
+	<bean id="myPublisher" class="spring.jms.MyPublisher">
+		<property name="template" ref="jmsTemplate" />
+		<property name="destination" ref="queueDest" />
+		<property name="myMsgCreator" ref="myMsgCreator" />
+	</bean>
+</beans>
